@@ -22,6 +22,7 @@ class Location extends SnipeModel
       'address'         => 'min:5|max:80',
       'address2'        => 'min:2|max:80',
       'zip'         => 'min:3|max:10',
+      'location_tag'    => 'min:3|max:255|unique_undeleted',
     );
 
     /**
@@ -138,6 +139,7 @@ class Location extends SnipeModel
           ->orWhere('city', 'LIKE', "%$search%")
           ->orWhere('state', 'LIKE', "%$search%")
           ->orWhere('zip', 'LIKE', "%$search%")
+          ->orWhere('location_tag', 'LIKE', "%$search%")
 
           // This doesn't actually work - need to use a table alias maybe?
           ->orWhere(function ($query) use ($search) {
