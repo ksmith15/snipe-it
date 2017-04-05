@@ -20,6 +20,17 @@
     </div>
 </div>
 
+<!-- Location Tag -->
+<div class="form-group {{ $errors->has('location_tag') ? ' has-error' : '' }}">
+  <label for="location_tag" class="col-md-3 control-label">
+    {{ trans('admin/locations/table.location_tag') }}
+  </label>
+  <div class="col-md-7 col-sm-12{{ (\App\Helpers\Helper::checkIfRequired($item, 'location_tag')) ? ' required' : '' }}">
+  {{ Form::text('location_tag', Input::old('location_tag', $item->location_tag)) }}
+  {!! $errors->first('location_tag', '<span class="alert-msg"><i class="fa fa-times"></i> :message</span>') !!}
+  </div>
+</div>
+
 <!-- Currency -->
 <div class="form-group {{ $errors->has('currency') ? ' has-error' : '' }}">
     <label for="currency" class="col-md-3 control-label">
@@ -50,34 +61,33 @@
     function parent_details(id) {
 
         if (id) {
-//start ajax request
-$.ajax({
-    type: 'GET',
-    url: "{{config('app.url') }}/api/locations/"+id+"/check",
-//force to handle it as text
-dataType: "text",
-success: function(data) {
-    var json = $.parseJSON(data);
-    $("#city").val(json.city);
-    $("#address").val(json.address);
-    $("#address2").val(json.address2);
-    $("#state").val(json.state);
-    $("#zip").val(json.zip);
-    $(".country").select2("val",json.country);
-}
-});
-} else {
-    $("#city").val('');
-    $("#address").val('');
-    $("#address2").val('');
-    $("#state").val('');
-    $("#zip").val('');
-    $(".country").select2("val",'');
-}
-
-
-
-};
+            //start ajax request
+            $.ajax({
+                type: 'GET',
+                url: "{{config('app.url') }}/api/locations/"+id+"/check",
+                //force to handle it as text
+                dataType: "text",
+                success: function(data) {
+                    var json = $.parseJSON(data);
+                    $(".location_tag").val(json.location_tag);
+                    $("#city").val(json.city);
+                    $("#address").val(json.address);
+                    $("#address2").val(json.address2);
+                    $("#state").val(json.state);
+                    $("#zip").val(json.zip);
+                    $(".country").select2("val",json.country);
+                }
+            });
+        } else {
+            $(".location_tag").val('');
+            $("#city").val('');
+            $("#address").val('');
+            $("#address2").val('');
+            $("#state").val('');
+            $("#zip").val('');
+            $(".country").select2("val",'');
+        }
+    };
 </script>
 @stop
 @endif

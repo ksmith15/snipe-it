@@ -125,6 +125,7 @@ class LocationsController extends Controller
 
         // Save the location data
         $location->name               = e(Input::get('name'));
+        $location->location_tag       = e(Input::get('location_tag'));
         $location->currency           =  Setting::first()->default_currency; //e(Input::get('currency'));
         $location->address            = ''; //e(Input::get('address'));
         // $location->address2			= e(Input::get('address2'));
@@ -193,17 +194,18 @@ class LocationsController extends Controller
         // Update the location data
         $location->name         = e(Input::get('name'));
         if (Input::get('parent_id')=='') {
-            $location->parent_id        = null;
+            $location->parent_id = null;
         } else {
-            $location->parent_id        = e(Input::get('parent_id', ''));
+            $location->parent_id = e(Input::get('parent_id', ''));
         }
-        $location->currency             = e(Input::get('currency', '$'));
-        $location->address          = e(Input::get('address'));
-        $location->address2             = e(Input::get('address2'));
-        $location->city             = e(Input::get('city'));
-        $location->state            = e(Input::get('state'));
-        $location->country      = e(Input::get('country'));
-        $location->zip            = e(Input::get('zip'));
+        $location->location_tag  = e(Input::get('location_tag', ''));
+        $location->currency      = e(Input::get('currency', '$'));
+        $location->address       = e(Input::get('address'));
+        $location->address2      = e(Input::get('address2'));
+        $location->city          = e(Input::get('city'));
+        $location->state         = e(Input::get('state'));
+        $location->country       = e(Input::get('country'));
+        $location->zip           = e(Input::get('zip'));
 
         // Was the asset created?
         if ($location->save()) {
@@ -290,7 +292,7 @@ class LocationsController extends Controller
     */
     public function getDatatable()
     {
-        $locations = Location::select(array('locations.id','locations.name','locations.address','locations.address2','locations.city','locations.state','locations.zip','locations.country','locations.parent_id','locations.currency'))->with('assets');
+        $locations = Location::select(array('locations.id','locations.name','locations.location_tag','locations.address','locations.address2','locations.city','locations.state','locations.zip','locations.country','locations.parent_id','locations.currency'))->with('assets');
 
 
         if (Input::has('search')) {
@@ -339,6 +341,7 @@ class LocationsController extends Controller
                 'name'          => (string)link_to('admin/settings/locations/'.$location->id.'/view', e($location->name)),
                 'parent'        => ($location->parent) ? e($location->parent->name) : '',
               //  'assets'        => ($location->assets->count() + $location->assignedassets->count()),
+                'location_tag'  => $location->location_tag,
                 'assets_default' => $location->assignedassets->count(),
                 'assets_checkedout' => $location->assets->count(),
                 'address'       => ($location->address) ? e($location->address): '',
